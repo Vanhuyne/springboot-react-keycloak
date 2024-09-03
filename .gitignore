@@ -1,2 +1,1 @@
-user-auth-service/docker/mysql/data/mysql.sock
-
+api-gateway/volume-data/mysql_keycloak_data/mysql.sock
