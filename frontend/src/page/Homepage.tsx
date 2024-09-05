@@ -1,43 +1,71 @@
 import React, { useEffect, useState } from 'react';
 import FeaturedMovie from '../components/FeaturedMovie';
 import MovieRecommendations from '../components/MovieRecommendations';
-
 import { getMovies } from '../services/movieService';
 import { Movie } from '../models/Moive';
+
 
 
 const HomePage: React.FC = () => {
   const [movies, setMovies] = useState<Movie[]>([]);
   const [featuredMovie, setFeaturedMovie] = useState<Movie | null>(null);
+  const [currentPage, setCurrentPage] = useState(0);
+  const [hasMore, setHasMore] = useState(true);
 
   useEffect(() => {
-    const fetchMovies = async () => {
-      try {
-        const fetchedMovies = await getMovies();
-        setMovies(fetchedMovies);
-        if (fetchedMovies.length > 0) {
-          setFeaturedMovie(fetchedMovies[0]); // Set the first movie as featured
-        }
-      } catch (error) {
-        console.error('Error fetching movies:', error);
+    const initializeMovies = async () => {
+      const initialMovies = await fetchInitialMovies();
+      if (initialMovies.length > 0) {
+        setMovies(initialMovies);
+        setFeaturedMovie(initialMovies[0]);
       }
     };
 
-    fetchMovies();
+    initializeMovies();
   }, []);
-  
+
+  const fetchInitialMovies = async () => {
+    try {
+      const response = await getMovies(0);
+      console.log(response.content);
+      setCurrentPage(1);
+      setHasMore(response.number < response.totalPages - 1);
+      return response.content;
+    } catch (error) {
+      console.error('Error fetching initial movies:', error);
+      return [];
+    }
+  };
+
+  const fetchMoreMovies = async (): Promise<Movie[]> => {
+    try {
+      const response = await getMovies(currentPage);
+      const newMovies = response.content;
+      setMovies(prevMovies => [...prevMovies, ...newMovies]);
+      setCurrentPage(prevPage => prevPage + 1);
+      setHasMore(response.number < response.totalPages - 1);
+      return newMovies;
+    } catch (error) {
+      console.error('Error fetching more movies:', error);
+      return [];
+    }
+  };
+
   return (
-    <div className="p-4 ">
+    <div className="p-4">
       {featuredMovie && (
         <FeaturedMovie
           title={featuredMovie.title}
           description={featuredMovie.description}
-          genre={featuredMovie.genre}
-          rating={0} // You might want to add a rating field to your Movie model
-          imageUrl={featuredMovie.poster}
+          genre={featuredMovie.genre.join(', ')}
+          rating={parseFloat(featuredMovie.rating)}
+          imageUrl={featuredMovie.big_image}
         />
       )}
-      <MovieRecommendations movies={movies.map(movie => ({ title: movie.title, imageUrl: movie.poster }))} />
+      <MovieRecommendations
+      initialMovies={movies}
+      fetchMoreMovies={fetchMoreMovies}
+      />
     </div>
   );
 };

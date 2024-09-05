@@ -18,32 +18,32 @@ public class RecommendationService {
     private final MovieRepository movieRepository;
     private final ReviewRepository reviewRepository;
 
-    public List<MovieResponse> getRecommendationsForUser(String userId) {
-        // sophisticated algorithm to get recommendations
-        List<Review> reviews = reviewRepository.findByUserId(userId);
-        List<String> highlyRatedMovies = reviews.stream()
-                .filter(review -> review.getRating() >= 4)
-                .map(review -> movieRepository.findById(review.getMovieId())
-                        .orElseThrow().getGenre())
-                .distinct()
-                .toList();
+//     public List<MovieResponse> getRecommendationsForUser(String userId) {
+//         // sophisticated algorithm to get recommendations
+//         List<Review> reviews = reviewRepository.findByUserId(userId);
+//         List<String> highlyRatedMovies = reviews.stream()
+//                 .filter(review -> review.getRating() >= 4)
+//                 .map(review -> movieRepository.findById(review.getMovieId())
+//                         .orElseThrow().getGenre())
+//                 .distinct()
+//                 .toList();
 
-        return movieRepository.findByGenreIn(highlyRatedMovies)
-                .stream()
-                .map(this::convertToMovieResponse)
-                .limit(10)
-                .toList();
-    }
+//         return movieRepository.findByGenreIn(highlyRatedMovies)
+//                 .stream()
+//                 .map(this::convertToMovieResponse)
+//                 .limit(10)
+//                 .toList();
+//     }
 
-    private MovieResponse convertToMovieResponse(Movie movie) {
-        return new MovieResponse(
-                movie.getId(),
-                movie.getTitle(),
-                movie.getGenre(),
-                movie.getReleaseYear(),
-                movie.getDirector(),
-                movie.getDescription(),
-                movie.getPoster()
-        );
-    }
+//     private MovieResponse convertToMovieResponse(Movie movie) {
+//         return new MovieResponse(
+//                 movie.getId(),
+//                 movie.getTitle(),
+//                 movie.getGenre(),
+//                 movie.getReleaseYear(),
+//                 movie.getDirector(),
+//                 movie.getDescription(),
+//                 movie.getPoster()
+//         );
+//     }
 }

@@ -1,22 +1,14 @@
 package com.movierecommendation.movie_review_service;
 
-import com.movierecommendation.movie_review_service.dto.MovieRequest;
-import com.movierecommendation.movie_review_service.model.Movie;
-import com.movierecommendation.movie_review_service.service.MovieService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 
-import java.util.Arrays;
-import java.util.List;
-
 @SpringBootApplication
 public class MovieReviewServiceApplication {
 
-	@Autowired
-	private MovieService movieService;
+
 	public static void main(String[] args) {
 		SpringApplication.run(MovieReviewServiceApplication.class, args);
 	}
