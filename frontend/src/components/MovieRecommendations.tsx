@@ -1,10 +1,13 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Movie } from '../models/Moive';
 import { FaStar } from 'react-icons/fa';
 
 interface MovieRecommendationsProps {
   initialMovies: Movie[];
   fetchMoreMovies: (page: number) => Promise<Movie[]>;
+  isLoading: boolean;
+  error: string | null;
+  currentPage: number;
 }
 
 const MovieRecommendations: React.FC<MovieRecommendationsProps> = ({ initialMovies, fetchMoreMovies }) => {
@@ -12,6 +15,11 @@ const MovieRecommendations: React.FC<MovieRecommendationsProps> = ({ initialMovi
   const [movies, setMovies] = useState<Movie[]>(initialMovies);
   const [page, setPage] = useState<number>(1);
   const [loading, setLoading] = useState<boolean>(false);
+
+  useEffect(() => {
+    setMovies(initialMovies);
+  }, [initialMovies]);
+  
 
   const handleSeeMore = async () => {
     setLoading(true);
