@@ -4,7 +4,11 @@
 
 A microservices-based movie recommendation system showcasing the integration of Spring Boot, React, and Keycloak.
 
+![Project Logo](screenshot/overview.png)
+
 ## Architecture
+
+![Project Logo](screenshot/microservice.png)
 
 - **Frontend**: React with TypeScript
 - **API Gateway**: Spring Boot
