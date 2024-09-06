@@ -11,6 +11,7 @@ import com.movierecommendation.movie_review_service.repository.MovieRepository;
 import com.movierecommendation.movie_review_service.repository.ReviewRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpEntity;
@@ -33,6 +34,9 @@ public class MovieService {
     private final ReviewRepository reviewRepository;
     private final RestTemplate restTemplate;
     private final ObjectMapper objectMapper;
+
+    @Value("${rapidapi.key}")
+    private String RapidAPIKey;
 
     public Page<MovieResponse> getAllMovies(Pageable pageable) {
         Page<Movie> movies = movieRepository.findAll(pageable);
@@ -145,7 +149,7 @@ public class MovieService {
 
         HttpHeaders headers = new HttpHeaders();
         headers.set("x-rapidapi-host", "imdb-top-100-movies.p.rapidapi.com");
-        headers.set("x-rapidapi-key", "26726093aemsh140383634f2f3d5p1e2954jsn18b116f01604");
+        headers.set("x-rapidapi-key", RapidAPIKey);
 
         HttpEntity<String> entity = new HttpEntity<>(headers);
         ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, entity , String.class);

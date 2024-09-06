@@ -15,7 +15,7 @@ const HomePage: React.FC = () => {
     setIsLoading(true);
     setError(null);
     try {
-      const response = await getMovies(0, 10); // Fetch 10 movies initially
+      const response = await getMovies(0, 5); // Fetch 10 movies initially
       setMovies(response.content);
       setFeaturedMovie(response.content[0]);
       console.log(response.content);

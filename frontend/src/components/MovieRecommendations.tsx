@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Movie } from '../models/Moive';
 import { FaStar } from 'react-icons/fa';
+import keycloak from '../keycloak';
+import { addMovieToPlayList } from '../services/playlistService';
 
 interface MovieRecommendationsProps {
   initialMovies: Movie[];
@@ -34,6 +36,21 @@ const MovieRecommendations: React.FC<MovieRecommendationsProps> = ({ initialMovi
     }
   };
 
+  const handleAddToPlaylist = async (movieId: string) => {
+    if(keycloak.authenticated){
+      try{
+        const userId = keycloak.tokenParsed?.sub as string;
+        await addMovieToPlayList(userId, movieId);
+        alert('Movie added to playlist');
+      }catch(error){
+        console.error('Error adding movie to playlist:', error);
+        alert('Error adding movie to playlist');
+      }
+    }else{
+      keycloak.login();
+    }
+  };
+
   return (
     <div className="mt-8">
       <h2 className="text-2xl font-bold mb-4">Recommended Movies</h2>
@@ -52,6 +69,12 @@ const MovieRecommendations: React.FC<MovieRecommendationsProps> = ({ initialMovi
                 <FaStar className="text-yellow-400 mr-1" />
                 {movie.rating}
               </p>
+              <button
+                onClick={() => handleAddToPlaylist(movie.id)}
+                className="mt-2 w-full bg-blue-500 text-white px-2 py-1 rounded"
+              >
+                Add to Playlist
+              </button>
             </div>
           </div>
         ))}

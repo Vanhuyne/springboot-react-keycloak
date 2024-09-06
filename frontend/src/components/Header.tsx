@@ -1,10 +1,15 @@
 import { useKeycloak } from '@react-keycloak/web';
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { FaListUl } from 'react-icons/fa';
+import PlaylistModal from './PlaylistModal';
+
 const Header = () => {
     const { keycloak } = useKeycloak();
-    
+    const [showPlaylist, setShowPlaylist] = useState(false);
+
     return (
-        <header className="flex justify-between items-center p-4 ">
+        <header className="flex justify-between items-center p-4">
             <div className="flex items-center space-x-4">
                 <img src="/assets/logo.png" alt="HeyCine Logo" className="h-10 w-10 rounded-full" />
                 <span className="text-2xl font-bold">HeyCine</span>   
@@ -14,7 +19,15 @@ const Header = () => {
                     <Link to="/tv-shows" className="text-lg text-gray-700 hover:text-gray-900">TV Shows</Link>
                 </nav>
             </div>
-            <div className="flex space-x-2 items-center">
+            <div className="flex space-x-4 items-center">
+                {keycloak.authenticated && (
+                    <button
+                        onClick={() => setShowPlaylist(true)}
+                        className="text-2xl text-gray-700 hover:text-gray-900"
+                    >
+                        <FaListUl />
+                    </button>
+                )}
                 {keycloak.authenticated ? (
                     <>
                         <span className="text-lg text-gray-700">{keycloak.tokenParsed?.preferred_username}</span>
@@ -42,6 +55,7 @@ const Header = () => {
                     </>
                 )}
             </div>
+            {showPlaylist && <PlaylistModal onClose={() => setShowPlaylist(false)} />}
         </header>
     );
 };

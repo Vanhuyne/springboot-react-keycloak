@@ -8,7 +8,7 @@ interface MovieResponse {
   size: number;
   number: number;
 }
-const API_URL = 'http://localhost:8082/api/movies';
+const API_URL = 'http://localhost:9000/api/movies';
 
 export const getMovies = async (page: number = 0, size: number = 5): Promise<MovieResponse> => {
   try {
